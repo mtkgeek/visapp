@@ -1,0 +1,65 @@
+
+  
+ 
+
+
+
+ 
+
+
+
+
+
+    <script src="https://cesium.com/downloads/cesiumjs/releases/1.105.1/Build/Cesium/Cesium.js"></script>
+    <link href="https://cesium.com/downloads/cesiumjs/releases/1.105.1/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
+    <div id="cesiumContainer"></div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+      Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOiIwNmVmMjJlNS0xN2QzLTQyOTQtYTdjMC03N2IwZmIzZDBhZjciLCJpZCI6MTM4MjE4LCJpYXQiOjE2ODM4ODk1ODR9.EaC0QHM86dQ7G1x2BzfR64q5tTwKG_9WQaACFSxar4A';
+      Cesium.GoogleMaps.defaultApiKey = "AIzaSyBcX3eWhNNXBp19wsMn5GUnhu0zDuN-FcI";
+    
+    
+      const viewer = new Cesium.Viewer("cesiumContainer", {
+        timeline: false,
+        animation: false,
+        sceneModePicker: false,
+        baseLayerPicker: false,
+      });
+    
+      viewer.scene.globe.show = false;
+    
+      // Load the Google Photorealistic 3D Tiles
+      async function loadTileset() {
+        try {
+          const tileset = await Cesium.createGooglePhotorealistic3DTileset();
+          viewer.scene.primitives.add(tileset);
+        } catch (error) {
+          console.log(`Error loading Photorealistic 3D Tiles tileset. ${error}`);
+        }
+      }
+      
+      loadTileset();
+    
+      // Load the GeoJSON Data
+      Cesium.GeoJsonDataSource.load('/static/output.geojson').then(function(dataSource) {
+        viewer.dataSources.add(dataSource);
+    
+        var entities = dataSource.entities.values;
+    
+        for (var i = 0; i < entities.length; i++) {
+          var entity = entities[i];
+          // Apply styles here
+        }
+    
+        var boundingSphere = Cesium.DataSource.computeBoundingSphere(dataSource);
+        viewer.camera.viewBoundingSphere(boundingSphere, new Cesium.HeadingPitchRange(0, -0.5, boundingSphere.radius));
+    
+        viewer.scene.screenSpaceCameraController.farBoundingSphereRadiusSquared = boundingSphere.radius * boundingSphere.radius;
+      }).catch(function(error){
+        console.log(`Error loading GeoJSON data. ${error}`);
+      });
+    
+    });
+    </script>
+    
