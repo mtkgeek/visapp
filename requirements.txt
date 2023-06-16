@@ -13,6 +13,7 @@ idna==3.4
 folium
 pandas
 geopandas
+bs4
 importlib-metadata==6.1.0
 Jinja2==3.1.2
 kiwisolver==1.4.4
