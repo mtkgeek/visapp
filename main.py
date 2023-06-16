@@ -15,4 +15,4 @@ def index_page(client: Client) -> None:
 pages.create()
 
 
-ui.run(title='Visualization Portfolio', show=False)
+ui.run(title='Visualization Portfolio', show=False, port=80)
